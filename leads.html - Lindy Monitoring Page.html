@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Leads Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2E5C8A;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .lead-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #2E5C8A;
+        }
+        .lead-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .lead-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1E3A5F;
+        }
+        .lead-timestamp {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        .lead-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .detail-item {
+            display: flex;
+            align-items: center;
+        }
+        .detail-label {
+            font-weight: bold;
+            margin-right: 8px;
+            min-width: 60px;
+        }
+        .priority-high {
+            background: #dc3545;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .priority-medium {
+            background: #ffc107;
+            color: #333;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .priority-low {
+            background: #28a745;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .no-leads {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 40px;
+        }
+        .update-info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 Cash-Pay Assessment Leads</h1>
+        
+        <div class="update-info">
+            <strong>Last Updated:</strong> <span id="lastUpdate">Loading...</span> | 
+            <strong>Total Leads:</strong> <span id="totalLeads">0</span>
+        </div>
+        
+        <div id="leadsContainer">
+            <div class="no-leads">
+                No leads captured yet. When someone completes the assessment, their information will appear here.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample lead data structure for Lindy to monitor
+        var leadsData = [
+            // This will be populated when people complete assessments
+            // Example structure:
+            // {
+            //     id: 'lead_1706123456789',
+            //     timestamp: '1/24/2025 at 2:30:45 PM',
+            //     name: 'Sarah Johnson',
+            //     practice: 'Beverly Hills Aesthetics',
+            //     email: 'sarah@bevhillsaesthetics.com',
+            //     phone: '(555) 123-4567',
+            //     practice_type: 'Plastic Surgery',
+            //     score: 12,
+            //     priority: 'MEDIUM PRIORITY'
+            // }
+        ];
+
+        // Function to display leads
+        function displayLeads() {
+            var container = document.getElementById('leadsContainer');
+            var lastUpdateSpan = document.getElementById('lastUpdate');
+            var totalLeadsSpan = document.getElementById('totalLeads');
+            
+            // Update timestamp and total
+            var now = new Date();
+            lastUpdateSpan.textContent = now.toLocaleDateString() + ' at ' + now.toLocaleTimeString();
+            totalLeadsSpan.textContent = leadsData.length;
+            
+            if (leadsData.length === 0) {
+                container.innerHTML = '<div class="no-leads">No leads captured yet. When someone completes the assessment, their information will appear here.</div>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = leadsData.length - 1; i >= 0; i--) {
+                var lead = leadsData[i];
+                var priorityClass = 'priority-low';
+                if (lead.priority === 'HIGH PRIORITY') priorityClass = 'priority-high';
+                else if (lead.priority === 'MEDIUM PRIORITY') priorityClass = 'priority-medium';
+                
+                html += '<div class="lead-item">' +
+                       '<div class="lead-header">' +
+                       '<div class="lead-name">' + lead.name + '</div>' +
+                       '<div class="lead-timestamp">' + lead.timestamp + '</div>' +
+                       '</div>' +
+                       '<div class="lead-details">' +
+                       '<div class="detail-item"><span class="detail-label">🏥 Practice:</span>' + lead.practice + '</div>' +
+                       '<div class="detail-item"><span class="detail-label">📧 Email:</span>' + lead.email + '</div>' +
+                       '<div class="detail-item"><span class="detail-label">📞 Phone:</span>' + lead.phone + '</div>' +
+                       '<div class="detail-item"><span class="detail-label">💼 Type:</span>' + lead.practice_type + '</div>' +
+                       '<div class="detail-item"><span class="detail-label">📊 Score:</span>' + lead.score + '/18 points</div>' +
+                       '<div class="detail-item"><span class="detail-label">🚨 Priority:</span><span class="' + priorityClass + '">' + lead.priority + '</span></div>' +
+                       '</div>' +
+                       '</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        // Function to add new lead (will be called from assessment)
+        function addNewLead(leadData) {
+            leadsData.push(leadData);
+            displayLeads();
+        }
+        
+        // Check for leads in localStorage (for demo purposes)
+        function checkLocalStorage() {
+            var storedLeads = localStorage.getItem('assessment_leads');
+            if (storedLeads) {
+                try {
+                    var leads = JSON.parse(storedLeads);
+                    if (leads && leads.length > 0) {
+                        leadsData = leads;
+                    }
+                } catch (e) {
+                    console.log('Error parsing stored leads:', e);
+                }
+            }
+        }
+        
+        // Initialize page
+        function init() {
+            checkLocalStorage();
+            displayLeads();
+        }
+        
+        // Auto-refresh every 30 seconds to check for new leads
+        setInterval(function() {
+            checkLocalStorage();
+            displayLeads();
+        }, 30000);
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
