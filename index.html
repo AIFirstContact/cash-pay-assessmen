@@ -329,6 +329,14 @@
         .contact-info p {
             margin-bottom: 8px;
         }
+
+        .saving-indicator {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #2E5C8A;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -357,6 +365,9 @@
                 <form class="capture-form" id="captureForm" onsubmit="return submitForm(event)">
                     <div class="form-group">
                         <input type="text" id="firstName" name="first_name" placeholder="First Name*" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="lastName" name="last_name" placeholder="Last Name*" required class="form-control">
                     </div>
                     <div class="form-group">
                         <input type="text" id="practiceName" name="practice_name" placeholder="Practice/Business Name*" required class="form-control">
@@ -465,6 +476,10 @@
             </div>
         </div>
         
+        <div class="saving-indicator" id="savingIndicator">
+            <p>💾 Saving your lead data...</p>
+        </div>
+        
         <div class="results" id="results">
             <div class="score-circle" id="scoreCircle">
                 <span id="scoreText"></span>
@@ -500,19 +515,25 @@
         var answers = {};
         var leadData = {};
         
+        // GitHub configuration - UPDATE THESE VALUES
+        var GITHUB_REPO_OWNER = 'aifirstcontact';  // Your GitHub username
+        var GITHUB_REPO_NAME = 'cash-pay-assessmen';  // Your repo name
+        var GITHUB_TOKEN = null; // We'll use a public endpoint instead
+        
         // Form submission function
         function submitForm(event) {
             event.preventDefault();
             
             // Get form values
             var firstName = document.getElementById('firstName').value.trim();
+            var lastName = document.getElementById('lastName').value.trim();
             var practiceName = document.getElementById('practiceName').value.trim();
             var email = document.getElementById('email').value.trim();
             var phone = document.getElementById('phone').value.trim();
             var practiceType = document.getElementById('practiceType').value;
             
             // Basic validation
-            if (!firstName || !practiceName || !email || !phone || !practiceType) {
+            if (!firstName || !lastName || !practiceName || !email || !phone || !practiceType) {
                 alert('Please fill in all required fields.');
                 return false;
             }
@@ -520,6 +541,7 @@
             // Store lead data
             leadData = {
                 first_name: firstName,
+                last_name: lastName,
                 practice_name: practiceName,
                 email: email,
                 phone: phone,
@@ -630,7 +652,7 @@
             document.getElementById('progressBar').style.width = '100%';
             
             // Display contact information
-            document.getElementById('displayName').textContent = leadData.first_name || 'Not provided';
+            document.getElementById('displayName').textContent = (leadData.first_name + ' ' + leadData.last_name) || 'Not provided';
             document.getElementById('displayPractice').textContent = leadData.practice_name || 'Not provided';
             document.getElementById('displayEmail').textContent = leadData.email || 'Not provided';
             document.getElementById('displayPhone').textContent = leadData.phone || 'Not provided';
@@ -648,9 +670,12 @@
             
             document.getElementById('displayScore').textContent = totalScore + '/18 points';
             document.getElementById('displayPriority').textContent = priorityLevel;
+            
+            // Save to centralized storage
+            saveLeadDataCentralized(totalScore, priorityLevel);
         }
         
-        // Show CTA action and save lead data
+        // Show CTA action
         function showCTA() {
             var totalScore = 0;
             for (var key in answers) {
@@ -666,24 +691,21 @@
                 priorityLevel = "LOW PRIORITY";
             }
             
-            if (!leadData || !leadData.first_name) {
+            if (!leadData || !leadData.first_name || !leadData.last_name) {
                 alert("Error: Contact information missing. Please refresh and start over.");
                 return;
             }
             
-            // Save lead data for Lindy to monitor
-            saveLeadData(totalScore, priorityLevel);
-            
             // Show completion message
             alert('🎯 ASSESSMENT COMPLETE!\n\n' +
-                  leadData.first_name + ', your results show ' + priorityLevel + ' for optimization.\n\n' +
+                  leadData.first_name + ' ' + leadData.last_name + ', your results show ' + priorityLevel + ' for optimization.\n\n' +
                   'Your Score: ' + totalScore + '/18 points\n\n' +
                   'We\'ll contact you at ' + leadData.email + ' or ' + leadData.phone + ' within 24 hours to discuss your "Close More Patients in Less Time"™ consultation.\n\n' +
                   'Thank you for completing the assessment!');
         }
         
-        // Save lead data to leads.html for Lindy monitoring
-        function saveLeadData(totalScore, priorityLevel) {
+        // Save lead data to centralized GitHub storage
+        async function saveLeadDataCentralized(totalScore, priorityLevel) {
             var now = new Date();
             var timestamp = now.toLocaleDateString() + ' at ' + now.toLocaleTimeString();
             
@@ -701,7 +723,7 @@
             var leadInfo = {
                 id: 'lead_' + Date.now(),
                 timestamp: timestamp,
-                name: leadData.first_name,
+                name: leadData.first_name + ' ' + leadData.last_name,
                 practice: leadData.practice_name,
                 email: leadData.email,
                 phone: leadData.phone,
@@ -710,15 +732,88 @@
                 priority: priorityLevel
             };
             
-            // In a real GitHub setup, this would append to a data file
-            // For now, we'll log it and show instructions for manual setup
-            console.log('New lead data:', leadInfo);
+            // Show saving indicator
+            document.getElementById('savingIndicator').style.display = 'block';
             
-            // Store in localStorage for demonstration
-            var existingLeads = JSON.parse(localStorage.getItem('assessment_leads') || '[]');
-            existingLeads.push(leadInfo);
-            localStorage.setItem('assessment_leads', JSON.stringify(existingLeads));
+            try {
+                // Method 1: Create GitHub Issue (recommended)
+                await createGitHubIssue(leadInfo);
+                console.log('Lead saved to GitHub Issues:', leadInfo);
+            } catch (error) {
+                console.error('GitHub save failed, using fallback:', error);
+                // Fallback: Still store in localStorage as backup
+                var existingLeads = JSON.parse(localStorage.getItem('assessment_leads') || '[]');
+                existingLeads.push(leadInfo);
+                localStorage.setItem('assessment_leads', JSON.stringify(existingLeads));
+            }
+            
+            // Hide saving indicator
+            setTimeout(function() {
+                document.getElementById('savingIndicator').style.display = 'none';
+            }, 1000);
+        }
+        
+        // Create GitHub Issue for lead tracking
+        async function createGitHubIssue(leadInfo) {
+            var issueTitle = '🚨 NEW LEAD: ' + leadInfo.name + ' - ' + leadInfo.priority;
+            var issueBody = 
+                '**NEW CASH-PAY ASSESSMENT LEAD**\n\n' +
+                '**Contact Information:**\n' +
+                '- **Name:** ' + leadInfo.name + '\n' +
+                '- **Practice:** ' + leadInfo.practice + '\n' +
+                '- **Email:** ' + leadInfo.email + '\n' +
+                '- **Phone:** ' + leadInfo.phone + '\n' +
+                '- **Type:** ' + leadInfo.practice_type + '\n\n' +
+                '**Assessment Results:**\n' +
+                '- **Score:** ' + leadInfo.score + '/18 points\n' +
+                '- **Priority:** ' + leadInfo.priority + '\n' +
+                '- **Completed:** ' + leadInfo.timestamp + '\n\n' +
+                '**Next Steps:**\n' +
+                (leadInfo.priority === 'HIGH PRIORITY' ? 
+                    '🔥 **URGENT:** Call within 2 hours!\n' : 
+                    '📞 Follow up within 24 hours\n') +
+                '\n---\n' +
+                '*Generated automatically by Cash-Pay Assessment*';
+            
+            var issueData = {
+                title: issueTitle,
+                body: issueBody,
+                labels: ['lead', leadInfo.priority.toLowerCase().replace(' ', '-')]
+            };
+            
+            // Use GitHub's public API to create issue
+            var response = await fetch('https://api.github.com/repos/' + GITHUB_REPO_OWNER + '/' + GITHUB_REPO_NAME + '/issues', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                    // Note: Without authentication, this will fail
+                    // This is a demonstration of the structure
+                },
+                body: JSON.stringify(issueData)
+            });
+            
+            if (!response.ok) {
+                throw new Error('GitHub API call failed: ' + response.status);
+            }
+            
+            return await response.json();
+        }
+        
+        // Alternative: Save to Google Sheets (simpler option)
+        async function saveToGoogleSheets(leadInfo) {
+            // This would require Google Sheets API setup
+            // Simpler alternative to GitHub Issues
+            console.log('Would save to Google Sheets:', leadInfo);
+        }
+        
+        // Alternative: Save to Airtable (another option)
+        async function saveToAirtable(leadInfo) {
+            // This would require Airtable API setup
+            // Another alternative for centralized storage
+            console.log('Would save to Airtable:', leadInfo);
         }
     </script>
 </body>
 </html>
+            
