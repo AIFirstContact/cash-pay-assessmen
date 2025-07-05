@@ -330,12 +330,26 @@
             margin-bottom: 8px;
         }
 
-        .saving-indicator {
+        .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 40px;
             color: #2E5C8A;
-            font-weight: bold;
+        }
+
+        .loading .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2E5C8A;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -362,55 +376,55 @@
                     <strong>Enter your information below to start your personalized assessment.</strong><br>
                     This takes just 2 minutes and shows exactly where your practice is losing revenue.
                 </p>
-                <form class="capture-form" id="captureForm" onsubmit="return submitForm(event)">
+                <div class="capture-form">
                     <div class="form-group">
-                        <input type="text" id="firstName" name="first_name" placeholder="First Name*" required class="form-control">
+                        <input type="text" id="firstName" placeholder="First Name*" required class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="text" id="lastName" name="last_name" placeholder="Last Name*" required class="form-control">
+                        <input type="text" id="lastName" placeholder="Last Name*" required class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="text" id="practiceName" name="practice_name" placeholder="Practice/Business Name*" required class="form-control">
+                        <input type="text" id="practiceName" placeholder="Practice/Business Name*" required class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="email" id="email" name="email" placeholder="Email Address*" required class="form-control">
+                        <input type="email" id="email" placeholder="Email Address*" required class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="phone" name="phone" placeholder="Phone Number*" required class="form-control">
+                        <input type="tel" id="phone" placeholder="Phone Number*" required class="form-control">
                     </div>
                     <div class="form-group">
-                        <select id="practiceType" name="practice_type" required class="form-control">
+                        <select id="practiceType" required class="form-control">
                             <option value="">Select Practice Type*</option>
-                            <option value="plastic_surgery">Plastic Surgery</option>
-                            <option value="aesthetic_medicine">Aesthetic Medicine</option>
-                            <option value="hormone_therapy">Hormone Therapy</option>
-                            <option value="hair_transplant">Hair Transplant</option>
-                            <option value="other_cash_pay">Other Cash-Pay Practice</option>
-                            <option value="other_high_value">Other Business (Average Client Value $5,000+)</option>
+                            <option value="Plastic Surgery">Plastic Surgery</option>
+                            <option value="Aesthetic Medicine">Aesthetic Medicine</option>
+                            <option value="Hormone Therapy">Hormone Therapy</option>
+                            <option value="Hair Transplant">Hair Transplant</option>
+                            <option value="Other Cash-Pay Practice">Other Cash-Pay Practice</option>
+                            <option value="Other Business (Average Client Value $5,000+)">Other Business (Average Client Value $5,000+)</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary form-submit">
+                    <button type="button" class="btn btn-primary form-submit" id="startBtn">
                         Start My FREE Assessment →
                     </button>
                     <p class="disclaimer">
                         Your information is secure and will never be shared. Results delivered instantly.
                     </p>
-                </form>
+                </div>
             </div>
 
             <div class="assessment-questions" id="assessmentQuestions" style="display: none;">
                 <div class="progress">
-                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
                 </div>
                 
                 <!-- Question 1 -->
                 <div class="question active" data-question="1">
                     <h3>What percentage of your consultations convert to surgery?</h3>
                     <div class="options">
-                        <div class="option" data-value="3" onclick="selectOption(this, 1, 3)">Less than 30% (High Risk - 3 points)</div>
-                        <div class="option" data-value="2" onclick="selectOption(this, 1, 2)">30-50% (Moderate Risk - 2 points)</div>
-                        <div class="option" data-value="1" onclick="selectOption(this, 1, 1)">50-70% (Some Risk - 1 point)</div>
-                        <div class="option" data-value="0" onclick="selectOption(this, 1, 0)">Over 70% (Low Risk - 0 points)</div>
+                        <div class="option" data-value="3">Less than 30% (High Risk - 3 points)</div>
+                        <div class="option" data-value="2">30-50% (Moderate Risk - 2 points)</div>
+                        <div class="option" data-value="1">50-70% (Some Risk - 1 point)</div>
+                        <div class="option" data-value="0">Over 70% (Low Risk - 0 points)</div>
                     </div>
                 </div>
                 
@@ -418,10 +432,10 @@
                 <div class="question" data-question="2">
                     <h3>What's your consultation no-show rate?</h3>
                     <div class="options">
-                        <div class="option" data-value="3" onclick="selectOption(this, 2, 3)">Over 20% (High Risk - 3 points)</div>
-                        <div class="option" data-value="2" onclick="selectOption(this, 2, 2)">10-20% (Moderate Risk - 2 points)</div>
-                        <div class="option" data-value="1" onclick="selectOption(this, 2, 1)">5-10% (Some Risk - 1 point)</div>
-                        <div class="option" data-value="0" onclick="selectOption(this, 2, 0)">Under 5% (Low Risk - 0 points)</div>
+                        <div class="option" data-value="3">Over 20% (High Risk - 3 points)</div>
+                        <div class="option" data-value="2">10-20% (Moderate Risk - 2 points)</div>
+                        <div class="option" data-value="1">5-10% (Some Risk - 1 point)</div>
+                        <div class="option" data-value="0">Under 5% (Low Risk - 0 points)</div>
                     </div>
                 </div>
                 
@@ -429,10 +443,10 @@
                 <div class="question" data-question="3">
                     <h3>How do you currently qualify leads before consultation?</h3>
                     <div class="options">
-                        <div class="option" data-value="3" onclick="selectOption(this, 3, 3)">We don't qualify - first come, first served (High Risk - 3 points)</div>
-                        <div class="option" data-value="2" onclick="selectOption(this, 3, 2)">Basic screening by receptionist (Moderate Risk - 2 points)</div>
-                        <div class="option" data-value="1" onclick="selectOption(this, 3, 1)">Some qualification questions (Some Risk - 1 point)</div>
-                        <div class="option" data-value="0" onclick="selectOption(this, 3, 0)">Comprehensive qualification system (Low Risk - 0 points)</div>
+                        <div class="option" data-value="3">We don't qualify - first come, first served (High Risk - 3 points)</div>
+                        <div class="option" data-value="2">Basic screening by receptionist (Moderate Risk - 2 points)</div>
+                        <div class="option" data-value="1">Some qualification questions (Some Risk - 1 point)</div>
+                        <div class="option" data-value="0">Comprehensive qualification system (Low Risk - 0 points)</div>
                     </div>
                 </div>
                 
@@ -440,10 +454,10 @@
                 <div class="question" data-question="4">
                     <h3>What happens immediately after a consultation?</h3>
                     <div class="options">
-                        <div class="option" data-value="3" onclick="selectOption(this, 4, 3)">Patient leaves to "think about it" (High Risk - 3 points)</div>
-                        <div class="option" data-value="2" onclick="selectOption(this, 4, 2)">We follow up in a few days (Moderate Risk - 2 points)</div>
-                        <div class="option" data-value="1" onclick="selectOption(this, 4, 1)">We try to close but often fail (Some Risk - 1 point)</div>
-                        <div class="option" data-value="0" onclick="selectOption(this, 4, 0)">Systematic same-day close process (Low Risk - 0 points)</div>
+                        <div class="option" data-value="3">Patient leaves to "think about it" (High Risk - 3 points)</div>
+                        <div class="option" data-value="2">We follow up in a few days (Moderate Risk - 2 points)</div>
+                        <div class="option" data-value="1">We try to close but often fail (Some Risk - 1 point)</div>
+                        <div class="option" data-value="0">Systematic same-day close process (Low Risk - 0 points)</div>
                     </div>
                 </div>
                 
@@ -451,10 +465,10 @@
                 <div class="question" data-question="5">
                     <h3>How many "consultation-ready" leads do you need monthly?</h3>
                     <div class="options">
-                        <div class="option" data-value="3" onclick="selectOption(this, 5, 3)">We need way more leads (High Risk - 3 points)</div>
-                        <div class="option" data-value="2" onclick="selectOption(this, 5, 2)">We need better quality leads (Moderate Risk - 2 points)</div>
-                        <div class="option" data-value="1" onclick="selectOption(this, 5, 1)">We have enough but conversion is low (Some Risk - 1 point)</div>
-                        <div class="option" data-value="0" onclick="selectOption(this, 5, 0)">We have optimal lead flow and conversion (Low Risk - 0 points)</div>
+                        <div class="option" data-value="3">We need way more leads (High Risk - 3 points)</div>
+                        <div class="option" data-value="2">We need better quality leads (Moderate Risk - 2 points)</div>
+                        <div class="option" data-value="1">We have enough but conversion is low (Some Risk - 1 point)</div>
+                        <div class="option" data-value="0">We have optimal lead flow and conversion (Low Risk - 0 points)</div>
                     </div>
                 </div>
                 
@@ -462,22 +476,23 @@
                 <div class="question" data-question="6">
                     <h3>Who handles your new patient calls?</h3>
                     <div class="options">
-                        <div class="option" data-value="3" onclick="selectOption(this, 6, 3)">Whoever answers the phone (High Risk - 3 points)</div>
-                        <div class="option" data-value="2" onclick="selectOption(this, 6, 2)">Front desk staff (Moderate Risk - 2 points)</div>
-                        <div class="option" data-value="1" onclick="selectOption(this, 6, 1)">Dedicated coordinator with some training (Some Risk - 1 point)</div>
-                        <div class="option" data-value="0" onclick="selectOption(this, 6, 0)">Highly trained conversion specialist (Low Risk - 0 points)</div>
+                        <div class="option" data-value="3">Whoever answers the phone (High Risk - 3 points)</div>
+                        <div class="option" data-value="2">Front desk staff (Moderate Risk - 2 points)</div>
+                        <div class="option" data-value="1">Dedicated coordinator with some training (Some Risk - 1 point)</div>
+                        <div class="option" data-value="0">Highly trained conversion specialist (Low Risk - 0 points)</div>
                     </div>
                 </div>
                 
                 <div class="navigation">
-                    <button class="btn btn-secondary" id="prevBtn" onclick="changeQuestion(-1)" disabled>Previous</button>
-                    <button class="btn btn-primary" id="nextBtn" onclick="changeQuestion(1)" disabled>Next</button>
+                    <button class="btn btn-secondary" id="prevBtn" disabled>Previous</button>
+                    <button class="btn btn-primary" id="nextBtn" disabled>Next</button>
                 </div>
             </div>
         </div>
         
-        <div class="saving-indicator" id="savingIndicator">
-            <p>💾 Saving your lead data...</p>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Calculating your assessment results...</p>
         </div>
         
         <div class="results" id="results">
@@ -489,7 +504,7 @@
             
             <!-- Contact Info Display -->
             <div class="contact-info" id="contactInfo">
-                <h3>📋 Lead Information:</h3>
+                <h3>📋 Your Assessment Details:</h3>
                 <p><strong>Name:</strong> <span id="displayName"></span></p>
                 <p><strong>Practice:</strong> <span id="displayPractice"></span></p>
                 <p><strong>Email:</strong> <span id="displayEmail"></span></p>
@@ -499,7 +514,7 @@
                 <p><strong>Priority:</strong> <span id="displayPriority"></span></p>
             </div>
             
-            <button class="cta" onclick="showCTA()">Get The "Close More Patients in Less Time"™ System</button>
+            <button class="cta" id="finalBtn">Get The "Close More Patients in Less Time"™ System</button>
         </div>
         
         <div class="author-credit">
@@ -509,22 +524,49 @@
     </div>
 
     <script>
-        // Global variables using var for compatibility
+        console.log('✅ EMAIL ALERT VERSION LOADED');
+        
+        // Global variables
         var currentQuestion = 1;
         var totalQuestions = 6;
         var answers = {};
         var leadData = {};
         
-        // GitHub configuration - UPDATE THESE VALUES
-        var GITHUB_REPO_OWNER = 'aifirstcontact';  // Your GitHub username
-        var GITHUB_REPO_NAME = 'cash-pay-assessmen';  // Your repo name
-        var GITHUB_TOKEN = null; // We'll use a public endpoint instead
-        
-        // Form submission function
-        function submitForm(event) {
-            event.preventDefault();
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Page loaded, setting up event listeners');
             
-            // Get form values
+            document.getElementById('startBtn').addEventListener('click', startAssessment);
+            
+            var options = document.querySelectorAll('.option');
+            options.forEach(function(option) {
+                option.addEventListener('click', function() {
+                    var questionNum = parseInt(this.closest('.question').getAttribute('data-question'));
+                    var value = parseInt(this.getAttribute('data-value'));
+                    selectOption(this, questionNum, value);
+                });
+            });
+            
+            document.getElementById('prevBtn').addEventListener('click', function() {
+                changeQuestion(-1);
+            });
+            
+            document.getElementById('nextBtn').addEventListener('click', function() {
+                if (currentQuestion === totalQuestions) {
+                    calculateResults();
+                } else {
+                    changeQuestion(1);
+                }
+            });
+            
+            document.getElementById('finalBtn').addEventListener('click', showThankYou);
+            
+            console.log('✅ All event listeners set up');
+        });
+        
+        function startAssessment() {
+            console.log('🚀 Starting assessment...');
+            
             var firstName = document.getElementById('firstName').value.trim();
             var lastName = document.getElementById('lastName').value.trim();
             var practiceName = document.getElementById('practiceName').value.trim();
@@ -532,13 +574,11 @@
             var phone = document.getElementById('phone').value.trim();
             var practiceType = document.getElementById('practiceType').value;
             
-            // Basic validation
             if (!firstName || !lastName || !practiceName || !email || !phone || !practiceType) {
                 alert('Please fill in all required fields.');
-                return false;
+                return;
             }
             
-            // Store lead data
             leadData = {
                 first_name: firstName,
                 last_name: lastName,
@@ -548,36 +588,32 @@
                 practice_type: practiceType
             };
             
-            // Start assessment
-            startAssessment();
-            return false;
-        }
-        
-        // Start the assessment
-        function startAssessment() {
+            console.log('✅ Data stored:', leadData);
+            
+            // Hide the form and start assessment
             document.getElementById('leadCapture').style.display = 'none';
             document.getElementById('assessmentQuestions').style.display = 'block';
             updateProgress();
+            
+            console.log('🎯 Assessment started successfully!');
         }
         
-        // Update progress bar
         function updateProgress() {
             var progress = ((currentQuestion - 1) / totalQuestions) * 100;
             document.getElementById('progressBar').style.width = progress + '%';
         }
         
-        // Handle option selection
         function selectOption(element, questionNum, value) {
-            var options = element.parentElement.querySelectorAll('.option');
-            for (var i = 0; i < options.length; i++) {
-                options[i].classList.remove('selected');
-            }
+            var options = element.closest('.question').querySelectorAll('.option');
+            options.forEach(function(opt) {
+                opt.classList.remove('selected');
+            });
+            
             element.classList.add('selected');
-            answers[questionNum] = parseInt(value);
+            answers[questionNum] = value;
             document.getElementById('nextBtn').disabled = false;
         }
         
-        // Change question navigation
         function changeQuestion(direction) {
             if (direction === 1 && currentQuestion < totalQuestions) {
                 document.querySelector('[data-question="' + currentQuestion + '"]').classList.remove('active');
@@ -595,7 +631,6 @@
                 
                 if (currentQuestion === totalQuestions) {
                     document.getElementById('nextBtn').textContent = 'See Results';
-                    document.getElementById('nextBtn').onclick = function() { calculateResults(); };
                 }
                 
             } else if (direction === -1 && currentQuestion > 1) {
@@ -608,20 +643,17 @@
                 }
                 
                 document.getElementById('nextBtn').textContent = 'Next';
-                document.getElementById('nextBtn').onclick = function() { changeQuestion(1); };
             }
             
             document.getElementById('prevBtn').disabled = currentQuestion === 1;
             updateProgress();
         }
         
-        // Calculate and show results
         function calculateResults() {
             var totalScore = 0;
             for (var key in answers) {
                 totalScore += answers[key];
             }
-            var maxScore = totalQuestions * 3;
             
             var resultTitle, resultDescription, scoreClass, priorityLevel;
             
@@ -642,178 +674,91 @@
                 priorityLevel = "LOW PRIORITY";
             }
             
+            // Submit to Netlify form
+            submitToNetlify(totalScore, priorityLevel);
+            
             document.querySelector('.content').style.display = 'none';
-            document.getElementById('results').classList.add('show');
+            document.getElementById('loading').style.display = 'block';
             
-            document.getElementById('scoreText').textContent = totalScore + '/' + maxScore;
-            document.getElementById('scoreCircle').className = 'score-circle ' + scoreClass;
-            document.getElementById('resultTitle').textContent = resultTitle;
-            document.getElementById('resultDescription').textContent = resultDescription;
-            document.getElementById('progressBar').style.width = '100%';
-            
-            // Display contact information
-            document.getElementById('displayName').textContent = (leadData.first_name + ' ' + leadData.last_name) || 'Not provided';
-            document.getElementById('displayPractice').textContent = leadData.practice_name || 'Not provided';
-            document.getElementById('displayEmail').textContent = leadData.email || 'Not provided';
-            document.getElementById('displayPhone').textContent = leadData.phone || 'Not provided';
-            
-            // Format practice type for display
-            var practiceTypeMap = {
-                'plastic_surgery': 'Plastic Surgery',
-                'aesthetic_medicine': 'Aesthetic Medicine',
-                'hormone_therapy': 'Hormone Therapy',
-                'hair_transplant': 'Hair Transplant',
-                'other_cash_pay': 'Other Cash-Pay Practice',
-                'other_high_value': 'Other Business (Average Client Value $5,000+)'
-            };
-            document.getElementById('displayType').textContent = practiceTypeMap[leadData.practice_type] || 'Not provided';
-            
-            document.getElementById('displayScore').textContent = totalScore + '/18 points';
-            document.getElementById('displayPriority').textContent = priorityLevel;
-            
-            // Save to centralized storage
-            saveLeadDataCentralized(totalScore, priorityLevel);
-        }
-        
-        // Show CTA action
-        function showCTA() {
-            var totalScore = 0;
-            for (var key in answers) {
-                totalScore += answers[key];
-            }
-            
-            var priorityLevel;
-            if (totalScore >= 15) {
-                priorityLevel = "HIGH PRIORITY";
-            } else if (totalScore >= 8) {
-                priorityLevel = "MEDIUM PRIORITY";
-            } else {
-                priorityLevel = "LOW PRIORITY";
-            }
-            
-            if (!leadData || !leadData.first_name || !leadData.last_name) {
-                alert("Error: Contact information missing. Please refresh and start over.");
-                return;
-            }
-            
-            // Show completion message
-            alert('🎯 ASSESSMENT COMPLETE!\n\n' +
-                  leadData.first_name + ' ' + leadData.last_name + ', your results show ' + priorityLevel + ' for optimization.\n\n' +
-                  'Your Score: ' + totalScore + '/18 points\n\n' +
-                  'We\'ll contact you at ' + leadData.email + ' or ' + leadData.phone + ' within 24 hours to discuss your "Close More Patients in Less Time"™ consultation.\n\n' +
-                  'Thank you for completing the assessment!');
-        }
-        
-        // Save lead data to centralized GitHub storage
-        async function saveLeadDataCentralized(totalScore, priorityLevel) {
-            var now = new Date();
-            var timestamp = now.toLocaleDateString() + ' at ' + now.toLocaleTimeString();
-            
-            // Format practice type for display
-            var practiceTypeMap = {
-                'plastic_surgery': 'Plastic Surgery',
-                'aesthetic_medicine': 'Aesthetic Medicine', 
-                'hormone_therapy': 'Hormone Therapy',
-                'hair_transplant': 'Hair Transplant',
-                'other_cash_pay': 'Other Cash-Pay Practice',
-                'other_high_value': 'Other Business (Average Client Value $5,000+)'
-            };
-            var practiceTypeDisplay = practiceTypeMap[leadData.practice_type] || leadData.practice_type;
-            
-            var leadInfo = {
-                id: 'lead_' + Date.now(),
-                timestamp: timestamp,
-                name: leadData.first_name + ' ' + leadData.last_name,
-                practice: leadData.practice_name,
-                email: leadData.email,
-                phone: leadData.phone,
-                practice_type: practiceTypeDisplay,
-                score: totalScore,
-                priority: priorityLevel
-            };
-            
-            // Show saving indicator
-            document.getElementById('savingIndicator').style.display = 'block';
-            
-            try {
-                // Method 1: Create GitHub Issue (recommended)
-                await createGitHubIssue(leadInfo);
-                console.log('Lead saved to GitHub Issues:', leadInfo);
-            } catch (error) {
-                console.error('GitHub save failed, using fallback:', error);
-                // Fallback: Still store in localStorage as backup
-                var existingLeads = JSON.parse(localStorage.getItem('assessment_leads') || '[]');
-                existingLeads.push(leadInfo);
-                localStorage.setItem('assessment_leads', JSON.stringify(existingLeads));
-            }
-            
-            // Hide saving indicator
             setTimeout(function() {
-                document.getElementById('savingIndicator').style.display = 'none';
-            }, 1000);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('results').classList.add('show');
+                
+                document.getElementById('scoreText').textContent = totalScore + '/18';
+                document.getElementById('scoreCircle').className = 'score-circle ' + scoreClass;
+                document.getElementById('resultTitle').textContent = resultTitle;
+                document.getElementById('resultDescription').textContent = resultDescription;
+                
+                document.getElementById('displayName').textContent = leadData.first_name + ' ' + leadData.last_name;
+                document.getElementById('displayPractice').textContent = leadData.practice_name;
+                document.getElementById('displayEmail').textContent = leadData.email;
+                document.getElementById('displayPhone').textContent = leadData.phone;
+                document.getElementById('displayType').textContent = leadData.practice_type;
+                document.getElementById('displayScore').textContent = totalScore + '/18 points';
+                document.getElementById('displayPriority').textContent = priorityLevel;
+            }, 2000);
         }
         
-        // Create GitHub Issue for lead tracking
-        async function createGitHubIssue(leadInfo) {
-            var issueTitle = '🚨 NEW LEAD: ' + leadInfo.name + ' - ' + leadInfo.priority;
-            var issueBody = 
-                '**NEW CASH-PAY ASSESSMENT LEAD**\n\n' +
-                '**Contact Information:**\n' +
-                '- **Name:** ' + leadInfo.name + '\n' +
-                '- **Practice:** ' + leadInfo.practice + '\n' +
-                '- **Email:** ' + leadInfo.email + '\n' +
-                '- **Phone:** ' + leadInfo.phone + '\n' +
-                '- **Type:** ' + leadInfo.practice_type + '\n\n' +
-                '**Assessment Results:**\n' +
-                '- **Score:** ' + leadInfo.score + '/18 points\n' +
-                '- **Priority:** ' + leadInfo.priority + '\n' +
-                '- **Completed:** ' + leadInfo.timestamp + '\n\n' +
-                '**Next Steps:**\n' +
-                (leadInfo.priority === 'HIGH PRIORITY' ? 
-                    '🔥 **URGENT:** Call within 2 hours!\n' : 
-                    '📞 Follow up within 24 hours\n') +
-                '\n---\n' +
-                '*Generated automatically by Cash-Pay Assessment*';
+        function submitToNetlify(totalScore, priorityLevel) {
+            console.log('📤 Submitting to Formspree...');
             
-            var issueData = {
-                title: issueTitle,
-                body: issueBody,
-                labels: ['lead', leadInfo.priority.toLowerCase().replace(' ', '-')]
-            };
+            // Create answers summary
+            var answerText = '';
+            for (var i = 1; i <= 6; i++) {
+                if (answers[i] !== undefined) {
+                    answerText += 'Q' + i + ': ' + answers[i] + ' points; ';
+                }
+            }
             
-            // Use GitHub's public API to create issue
-            var response = await fetch('https://api.github.com/repos/' + GITHUB_REPO_OWNER + '/' + GITHUB_REPO_NAME + '/issues', {
+            // Create form data for Formspree
+            var formData = new FormData();
+            formData.append('first-name', leadData.first_name);
+            formData.append('last-name', leadData.last_name);
+            formData.append('practice-name', leadData.practice_name);
+            formData.append('email', leadData.email);
+            formData.append('phone', leadData.phone);
+            formData.append('practice-type', leadData.practice_type);
+            formData.append('score', totalScore + '/18');
+            formData.append('priority-level', priorityLevel);
+            formData.append('detailed-answers', answerText);
+            formData.append('completed-date', new Date().toLocaleString());
+            
+            // Submit to Formspree with your form ID
+            fetch('https://formspree.io/f/mrbkvqpg', {
                 method: 'POST',
+                body: formData,
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json'
-                    // Note: Without authentication, this will fail
-                    // This is a demonstration of the structure
-                },
-                body: JSON.stringify(issueData)
+                    'Accept': 'application/json'
+                }
+            }).then(function(response) {
+                if (response.ok) {
+                    console.log('✅ Successfully submitted to Formspree');
+                } else {
+                    console.log('⚠️ Formspree submission error');
+                }
+            }).catch(function(error) {
+                console.log('⚠️ Network error:', error);
             });
             
-            if (!response.ok) {
-                throw new Error('GitHub API call failed: ' + response.status);
-            }
+            console.log('✅ Submitted with data:', {
+                name: leadData.first_name + ' ' + leadData.last_name,
+                email: leadData.email,
+                score: totalScore + '/18',
+                priority: priorityLevel
+            });
+        }
+        
+        function showThankYou() {
+            var message = '🎯 ASSESSMENT COMPLETE!\n\n' +
+                  leadData.first_name + ' ' + leadData.last_name + ', your results show ' + 
+                  document.getElementById('displayPriority').textContent + ' for optimization.\n\n' +
+                  'Your Score: ' + document.getElementById('displayScore').textContent + '\n\n' +
+                  'We will contact you at ' + leadData.email + ' or ' + leadData.phone + 
+                  ' within 24 hours to discuss your "Close More Patients in Less Time" consultation.\n\n' +
+                  'Thank you for completing the assessment!';
             
-            return await response.json();
-        }
-        
-        // Alternative: Save to Google Sheets (simpler option)
-        async function saveToGoogleSheets(leadInfo) {
-            // This would require Google Sheets API setup
-            // Simpler alternative to GitHub Issues
-            console.log('Would save to Google Sheets:', leadInfo);
-        }
-        
-        // Alternative: Save to Airtable (another option)
-        async function saveToAirtable(leadInfo) {
-            // This would require Airtable API setup
-            // Another alternative for centralized storage
-            console.log('Would save to Airtable:', leadInfo);
+            alert(message);
         }
     </script>
 </body>
 </html>
-            
